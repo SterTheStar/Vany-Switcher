@@ -8,14 +8,12 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 import winreg
 
-# Função para verificar permissões de administrador
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
     except:
         return False
 
-# Função para atualizar o registro
 def set_registry_value(value):
     try:
         registry_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options"
@@ -28,7 +26,6 @@ def set_registry_value(value):
     except Exception as e:
         return False, str(e)
 
-# Função para verificar ou criar o caminho do registro
 def ensure_registry_path():
     try:
         registry_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options"
@@ -41,7 +38,6 @@ def ensure_registry_path():
         except Exception as e:
             return False, str(e)
 
-# Textos para tradução
 translations = {
     "en": {
         "title": "Vany Switcher",
@@ -77,7 +73,6 @@ translations = {
     }
 }
 
-# Janela principal
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -87,28 +82,23 @@ class MainWindow(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
-        # Layout principal
         layout = QVBoxLayout()
 
-        # Seleção de idioma
         self.language_selector = QComboBox()
         self.language_selector.addItems(["English", "Português"])
         self.language_selector.currentIndexChanged.connect(self.change_language)
         layout.addWidget(self.language_selector)
 
-        # Título
         self.title = QLabel(translations[self.language]["title"])
         self.title.setFont(QFont("Arial", 20, QFont.Bold))
         self.title.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.title)
 
-        # Mensagem de descrição
         self.description = QLabel(translations[self.language]["description"])
         self.description.setFont(QFont("Arial", 14))
         self.description.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.description)
 
-        # Botões para alternar
         self.btn_valorant = QPushButton(translations[self.language]["set_valorant"])
         self.btn_valorant.setFont(QFont("Arial", 12))
         self.btn_valorant.clicked.connect(lambda: self.change_registry(0))
@@ -119,19 +109,16 @@ class MainWindow(QMainWindow):
         self.btn_sony.clicked.connect(lambda: self.change_registry(1))
         layout.addWidget(self.btn_sony)
 
-        # Botão para corrigir o caminho do registro
         self.btn_fix = QPushButton(translations[self.language]["fix_path"])
         self.btn_fix.setFont(QFont("Arial", 12))
         self.btn_fix.clicked.connect(self.fix_registry_path)
         layout.addWidget(self.btn_fix)
 
-        # Mensagem de informação
         self.info_label = QLabel(translations[self.language]["info"])
         self.info_label.setFont(QFont("Arial", 12))
         self.info_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.info_label)
 
-        # Configuração da central
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
@@ -173,7 +160,6 @@ class MainWindow(QMainWindow):
         else:
             QMessageBox.critical(self, translations[self.language]["error"], translations[self.language]["registry_fix_error"].format(error=error))
 
-# Inicialização do aplicativo
 if __name__ == "__main__":
     if not is_admin():
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
