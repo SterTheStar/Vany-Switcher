@@ -17,4 +17,4 @@
 
 ### 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/vany-switcher.git
+git clone https://github.com/SterTheStar//vany-switcher.git
